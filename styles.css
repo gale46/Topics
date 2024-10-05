@@ -1,0 +1,83 @@
+/* styles.css */
+
+.gesture-detection {
+    position: relative; /* 相對於父元素的定位 */
+    width: 100%; /* 讓它填滿父元素 */
+    height: 100%; /* 讓它填滿父元素 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#gestureMessages {
+    position: absolute; /* 改為 absolute */
+    top: 70px; /* 設定為 header 的高度加上額外的間距 */
+    right: 20px;
+    z-index: 10;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    max-height: 200px;
+    overflow: hidden;
+}
+
+.gestureMessage {
+    position: relative; /* 為標籤定位提供基礎 */
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+.fadeOut {
+    animation: fadeOut 0.5s forwards;
+}
+
+/* 標籤樣式 */
+.gestureMessage .label {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff5722; /* 橙色背景 */
+    color: white;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* 透明度級別 */
+.opacity-100 { opacity: 1; }
+.opacity-80 { opacity: 0.8; }
+.opacity-60 { opacity: 0.6; }
+
+/* 動畫效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
