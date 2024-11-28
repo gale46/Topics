@@ -1,94 +1,51 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>海豹躺平</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-</head>
-<body class="is-preload landing">
-    <div id="page-wrapper">
-        <!-- Header -->
-        <header id="header">
-					<h1 id="logo"><a href="index.php"><img width="100" src="images/sealsleeping.gif"/></a></h1>
-					<nav id="nav">
-						<ul>
-                        <li><a href="index.php">首頁</a></li>
-							<li><a href="pictures.php">上傳作品</a></li>
-							<li><a href="sign_up.php">報名比賽</a></li>
-							<?php
-                                session_start();
-                                if (isset($_SESSION['email'])) {
-                                    echo '<li><a href="logout.php" class="button primary">登出</a></li>';
-                                    echo '<li><span>' . $_SESSION['email'] . ' Hello!!</span></li>';
-                                } else {
-                                    echo '<li><a href="login.php" class="button primary">登入</a></li>';
-                                }
-                                ?>
-						</ul>
-					</nav>
-				</header>
+<?php
+//處理註冊資料
+//成功跳回 login.php
+//失敗  reg.php
+// 設定資料庫連線
+$host = 'localhost';
+$dbname = 'project'; // 請替換成你的資料庫名稱
+$user = 'root';    // 請替換成你的資料庫使用者名稱
+$pass = ''; // 請替換成你的資料庫密碼
 
-        <!-- Main -->
-        <div id="main" class="wrapper style1">
-            <div class="container">
-                <header class="major">
-                    <h2>註冊</h2>
-                </header>
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("無法連線資料庫: " . $e->getMessage());
+}
 
-                <!-- Form -->
-                <section style="text-align: center;">
-					<form method="post" action="register_process.php">
-						<div class="row gtr-uniform gtr-50">
-							<div class="col-6 col-12-xsmall">
-								<input type="text" name="username" id="username" placeholder="用戶名" required />
-							</div>
-							<div class="col-6 col-12-xsmall">
-								<input type="email" name="email" id="email" placeholder="Email" required size="30" />
-							</div>
-							<div class="col-6 col-12-xsmall">
-								<input type="password" name="password" id="password" placeholder="密碼" required size="30" />
-							</div>
-							<div class="col-12">
-								<ul class="actions">
-									<li><input type="submit" value="註冊" class="primary" /></li>
-									<li><input type="reset" value="清除" /></li>
-								</ul>
-							</div>
-						</div>
-					</form>
-				</section>
+// 檢查表單是否送出
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
+    // 檢查是否有重複的 username
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $userExists = $stmt->fetchColumn();
 
-            </div>
-        </div>
+    if ($userExists) {
+        // 如果 username 已存在，跳轉回註冊頁面
+        header("Location: reg.php?error=username_taken");
+        exit();
+    } else {
+        // 加到資料庫
+        $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+        $stmt->execute([$username, $password]);
 
-        <!-- Footer -->
-        <footer id="footer">
-            <ul class="icons">
-                <li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-                <li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-                <li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-                <li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-                <li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
-            </ul>
-            <ul class="copyright">
-                <li>&copy; 版權被海豹吃了。</li><li>Design: <a href="https://www.youtube.com/watch?v=dD1wBSsNOL0&t=2s">SEAL</a></li>
-            </ul>
-        </footer>
-    </div>
+        // 查詢最大 user_id
+        $sql = "SELECT MAX(user_id) AS max_id FROM users";
+        $result = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC); // 提取查詢結果
+        $maxUserId = $result['max_id']; // 提取 user_id 值
 
-    <!-- Scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.scrolly.min.js"></script>
-    <script src="assets/js/jquery.dropotron.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
+        // 插入 device_usage 表
+        $stmt = $pdo->prepare("INSERT INTO device_usage (user_id) VALUES (?)");
+        $stmt->execute([$maxUserId]);
 
-</body>
-</html>
+        // 跳轉到 登入頁面
+        header("Location: login.php");
+        exit();
+    }
+}
+?>
