@@ -337,16 +337,16 @@ while cap.isOpened():
 
                 if left_hand_gesture == 1:  # 應用程式切換
 
-                    last_switch_time = 0  # 上次切换的时间
-                    SWITCH_DELAY = 1  # 设置切换间隔（单位：秒）
+                    last_switch_time = 0
+                    SWITCH_DELAY = 1
 
-                    current_time = time.time()  # 获取当前时间
+                    current_time = time.time()
 
-                    if current_time - last_switch_time > SWITCH_DELAY:  # 检查时间间隔
+                    if current_time - last_switch_time > SWITCH_DELAY:
                         if x_distance > 0.1:
-                            pyautogui.hotkey('alt', 'tab')  # 切换到下一个应用
+                            pyautogui.hotkey('alt', 'tab')
                         elif x_distance < -0.1:
-                            pyautogui.hotkey('alt', 'shift', 'tab')  # 切换到上一个应用
+                            pyautogui.hotkey('alt', 'shift', 'tab')
 
                         last_switch_time = current_time  # 更新上次切换时间
                     try:
@@ -363,12 +363,12 @@ while cap.isOpened():
                         print(f"資料庫錯誤: {e}")
 
                 elif left_hand_gesture == 0:
-                    last_switch_time = 0  # 上次切换的时间
-                    SWITCH_DELAY = 1  # 设置切换间隔（单位：秒）
+                    last_switch_time = 0
+                    SWITCH_DELAY = 1
                     # 切换音量静音状态
-                    pyautogui.press('volumemute')  # 切换音量静音
+                    pyautogui.press('volumemute')
                     # 更新静音状态标志
-                    is_muted = not is_muted  # 如果已经静音就恢复，反之静音
+                    is_muted = not is_muted
 
                 elif left_hand_gesture == 2:  # 畫圖功能
                     new_pos = (int(index_tip.x * drawing_window.image.shape[1]), int(

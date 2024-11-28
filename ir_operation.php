@@ -11,6 +11,155 @@ if(isset($_SESSION["user_id"])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>家電控制</title>
+    <style>/* 基本樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1d26; /* 深灰背景 */
+            color: #ffffff; /* 白色文字 */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+   
+        nav {
+            background-color: #272833;
+            padding: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav ul li {
+            display: inline-block;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 5px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #e44c65;
+            border-color: #e44c65;
+        }
+
+        /* 按鈕樣式 */
+        button {
+            background-color: #e44c65;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #c4374f;
+        }
+
+        /* 表單樣式 */
+        form {
+            background-color: #272833;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 400px;
+            text-align: left;
+            color: #ffffff;
+        }
+
+        form h2 {
+            color: #e44c65;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        form input[type="text"],
+        form input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #1c1d26;
+            color: #ffffff;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="number"]:focus {
+            outline: none;
+            border-color: #e44c65;
+        }
+
+        /* 按鈕 */
+        #buttonContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        #buttonContainer button {
+            width: auto;
+            min-width: 100px;
+        }
+
+        /* 顯示區域 */
+        #irDisplay {
+            margin: 20px auto;
+            padding: 10px;
+            width: 80%;
+            background-color: #272833;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            text-align: left;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        #irDataReturn {
+            color: #e44c65;
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+
+        @media (max-width: 768px) {
+            form {
+                width: 90%;
+            }
+
+            nav ul li a {
+                font-size: 0.8rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+        }
+        </style>
     <script>
         const gestureMapping = {}; // 初始化
         const userId = <?php echo json_encode($_SESSION['user_id']); ?>;//$_SESSION[user_id]轉為json 

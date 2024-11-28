@@ -17,8 +17,6 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 // 檢查資料庫連接是否成功
 if ($conn->connect_error) {
     die("連接失敗: " . $conn->connect_error); // 輸出錯誤信息並終止腳本
-    // 跳轉到 登入頁面
-    header("Location: login.php");
 }
 
 // 登入邏輯
@@ -68,6 +66,120 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <head>
         <title>登入</title>
     </head>
+    <style>
+        /* 全局樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1d26; /* 深灰背景色 */
+            color: #ffffff; /* 白色文字 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 標題 */
+        h1, h2, h3 {
+            color: #e44c65; /* 紅色點綴 */
+        }
+
+        /* 表單樣式 */
+        form {
+            background-color: #272833; /* 深灰背景 */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"], 
+        form input[type="password"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: calc(100% - 20px);
+        }
+
+        form input[type="submit"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #e44c65;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #c4374f;
+        }
+
+        /* 錯誤提示文字 */
+        form p {
+            color: #e44c65;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        nav {
+            margin-top: 20px;
+            background-color: #272833;
+            padding: 10px 0;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        nav ul li {
+            display: inline-block;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #e44c65;
+            border-color: #e44c65;
+        }
+
+       
+        @media (max-width: 480px) {
+            form {
+                width: 90%;
+            }
+
+            nav ul li a {
+                font-size: 0.8rem;
+            }
+        }
+
+    </style>
     <body>
         <form method="POST" action="">
             <label for="username">用戶名:</label>

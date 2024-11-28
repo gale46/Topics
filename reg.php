@@ -1,4 +1,4 @@
-<!--註冊頁面-->
+<!--註冊頁面會跳到register.php驗證-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +6,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊帳號</title>
     <style>
-        /* 顯示文字的顏色*/
-        .error { color: red; }
-        .weak { color: red; }
-        .strong { color: green; }
+        /* 全局樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1d26; /* 背景色深灰 */
+            color: #ffffff; /* 文字顏色白色 */
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #e44c65; /* 標題顏色 */
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 表單樣式 */
+        form {
+            width: 80%;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #272833; /* 深灰背景 */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        form label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        form input[type="text"],
+        form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            background-color: #1c1d26;
+            color: #ffffff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="password"]:focus {
+            border-color: #e44c65;
+            outline: none;
+        }
+
+        form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #e44c65;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #e76278;
+        }
+
+        /* 密碼提示樣式 */
+        #password-feedback {
+            display: block;
+            font-size: 0.9rem;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+
+        .weak {
+            color: #ff5722; /* 弱密碼顏色 */
+        }
+
+        .strong {
+            color: #39c088; /* 強密碼顏色 */
+        }
+
+        /* 錯誤提示樣式 */
+        .error {
+            color: #ff5722; /* 錯誤訊息顏色 */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        #nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        #nav ul li a:hover {
+            background-color: #e44c65;
+            border-color: #e44c65;
+            color: #ffffff;
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 15px;
+            }
+
+            form label {
+                font-size: 0.9rem;
+            }
+
+            form input[type="text"],
+            form input[type="password"],
+            form input[type="submit"] {
+                font-size: 0.9rem;
+            }
+
+            #nav ul li a {
+                font-size: 0.9rem;
+                padding: 5px;
+            }
+        }
+
     </style>
+
 </head>
 <body>
     <h2>註冊帳號</h2>

@@ -15,6 +15,83 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hand Gesture Capture</title>
+    <style>/* 基本樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1d26; /* 深色背景 */
+            color: #ffffff; /* 白色文字 */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #272833;
+            padding: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav ul li {
+            display: inline-block;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 5px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #e44c65;
+            border-color: #e44c65;
+        }
+
+        /* 標題樣式 */
+        h1 {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #e44c65;
+        }
+
+        /* 影像顯示區 */
+        video {
+            border: 5px solid #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+
+      
+        @media (max-width: 768px) {
+            video {
+                width: 100%;
+                height: auto;
+            }
+
+            nav ul li a {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        </style>
 </head>
 <body>
         <nav>        

@@ -7,6 +7,102 @@
     <head>
         <title>登入</title>
     </head>
+    <style>
+        /* 全局樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1d26; /* 背景色深灰 */
+            color: #ffffff; /* 文字顏色白色 */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3 {
+            color: #e44c65; /* 標題顏色 */
+            text-align: center;
+        }
+
+    
+        nav {
+            background-color: #272833; /* 深灰背景 */
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #e44c65;
+            border-color: #e44c65;
+            color: #ffffff;
+        }
+
+        /* 表格樣式 */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #272833; /* 深灰背景 */
+            color: #ffffff; /* 表格文字顏色 */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* 表格邊框 */
+        }
+
+        table th, table td {
+            border: 1px solid rgba(255, 255, 255, 0.2); /* 表格內部分隔線 */
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #1c1d26; /* 表格標題背景色 */
+            font-weight: bold;
+            color: #e44c65; /* 表格標題文字顏色 */
+        }
+
+        table tr:nth-child(even) {
+            background-color: #20232d; /* 偶數行背景色 */
+        }
+
+        table tr:hover {
+            background-color: #333544; /* 滑鼠停效果 */
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 480px) {
+            table, nav ul li a {
+                font-size: 0.8rem;
+            }
+
+            nav ul li {
+                margin: 0 5px;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+        }
+
+    </style>
     <body>
         <nav>        
                 <ul>

@@ -14,10 +14,11 @@ config = {
     'port': 3306  
 }
 #Arduino連接COM5
-
-ser = serial.Serial('COM5', 9600, timeout=1) 
-time.sleep(2)
-
+try:
+    ser = serial.Serial('COM5', 9600, timeout=1) 
+    time.sleep(2)
+except:
+    print("error")
 try:#access database測試
     conn = pymysql.connect(**config)
     cursor = conn.cursor()
