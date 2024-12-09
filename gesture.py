@@ -1,3 +1,15 @@
+#記得更改userId
+userId = 1
+
+
+
+
+
+
+
+
+
+
 import cv2
 import mediapipe as mp
 import pyautogui
@@ -16,7 +28,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
-userId = 1
+
+
 
 ser = serial.Serial('COM5', 9600, timeout=1)
 time.sleep(2)
@@ -184,6 +197,29 @@ clickDistance = 30
 wScr, hScr = pyautogui.size()  # 獲取螢幕解析度
 clickDistance = 30
 
+def update_gesture_count(userId, gesture, conn):
+    try:
+        cursor = conn.cursor()
+
+        # 動態構建 SQL 語句，確保欄位名稱是安全的
+        sql = f"UPDATE device_usage SET {gesture} = {gesture} + 1 WHERE user_id = %s"
+        
+        # 執行 SQL 語句
+        cursor.execute(sql, (userId,))
+        now = datetime.now()
+        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
+            userId, gesture, now))
+        cursor.execute(sql, (userId))
+        # 提交變更
+        conn.commit()
+        print(f"{gesture} 更新成功！")
+    except pymysql.MySQLError as e:
+        conn.rollback()
+        print(f"資料庫錯誤: {e}")
+    finally:
+        cursor.close()
+
 
 # 計算两个向量的夾角
 def vector_2d_angle(v1, v2):
@@ -349,18 +385,7 @@ while cap.isOpened():
                             pyautogui.hotkey('alt', 'shift', 'tab')
 
                         last_switch_time = current_time  # 更新上次切换时间
-                    try:
-                        sql = "UPDATE device_usage SET appliance_change	= appliance_change	+ 1 WHERE user_id = %s"
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute(
-                            "INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (userId, "appliance_change", now))
-                        print(userId)
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-                        print("appliance_change更新成功！")
-                    except pymysql.MySQLError as e:
-                        print(f"資料庫錯誤: {e}")
+                    update_gesture_count(userId, "appliance_change" , conn)
 
                 elif left_hand_gesture == 0:
                     last_switch_time = 0
@@ -374,18 +399,7 @@ while cap.isOpened():
                     new_pos = (int(index_tip.x * drawing_window.image.shape[1]), int(
                         index_tip.y * drawing_window.image.shape[0]))
                     drawing_window.draw(frame, new_pos)
-                    try:
-                        sql = "UPDATE device_usage SET drawing_gesture_count = drawing_gesture_count + 1 WHERE user_id = %s"
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                            userId, "drawing_gesture_count", now))
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-
-                        print("drawing_gesture_count更新成功！")
-                    except pymysql.MySQLError as e:
-                        print(f"資料庫錯誤: {e}")
+                    update_gesture_count(userId, "drawing_gesture_count" , conn)
 
                 elif left_hand_gesture == 3:  # 音量控制
                     distance = math.sqrt(
@@ -394,51 +408,22 @@ while cap.isOpened():
                         pyautogui.press('volumeup', presses=VOLUME_INCREMENT)
                     else:
                         pyautogui.press('volumedown', presses=VOLUME_INCREMENT)
-                    try:
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                            userId, "volume_gesture_count", now))
-                        sql = "UPDATE device_usage SET volume_gesture_count = volume_gesture_count + 1 WHERE user_id = %s"
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-                        print("volume_gesture_count更新成功！")
-                    except:
-                        print("volume_gesture_count更新錯誤")
+                    
+                    update_gesture_count(userId, "volume_gesture_count", conn)
 
                 elif left_hand_gesture == 4:  # 音樂控制
                     if x_distance > 0.1:
                         pyautogui.press('nexttrack')
                     elif x_distance < -0.1:
                         pyautogui.press('prevtrack')
-                    try:
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                            userId, "music_gesture_count", now))
-                        sql = "UPDATE device_usage SET music_gesture_count = music_gesture_count + 1 WHERE user_id = %s"
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-                        print("music_gesture_count更新成功！")
-                    except:
-                        print("music_gesture_count更新錯誤")
+                    update_gesture_count(userId, "music_gesture_count" , conn)
 
                 elif left_hand_gesture == 5:  # 網頁滾動
                     if y_distance > 0.1:
                         pyautogui.scroll(-SCROLL_STEP)
                     elif y_distance < -0.1:
                         pyautogui.scroll(SCROLL_STEP)
-                    try:
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                            userId, "scroll_gesture_count", now))
-                        sql = "UPDATE device_usage SET scroll_gesture_count = scroll_gesture_count + 1 WHERE user_id = %s"
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-                        print("scroll_gesture_count更新成功！")
-                    except:
-                        print("scroll_gesture_count更新錯誤")
+                    update_gesture_count(userId, "scroll_gesture_count" , conn)
 
                 elif left_hand_gesture == 6:  # 簡報翻頁
                     if x_distance > 0.1:
@@ -447,17 +432,7 @@ while cap.isOpened():
                     elif x_distance < -0.1:
                         pyautogui.press('left')
                         current_page = max(1, current_page - 1)
-                    try:
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                            userId, "slide_gesture_count", now))
-                        sql = "UPDATE device_usage SET slide_gesture_count = slide_gesture_count + 1 WHERE user_id = %s"
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-                        print("slide_gesture_count更新成功！")
-                    except:
-                        print("slide_gesture_count更新錯誤")
+                    update_gesture_count(userId, "slide_gesture_count" , conn)
 
                 # 確保正確地使用 datetime.now().second
                 elif left_hand_gesture == 7:
@@ -473,17 +448,7 @@ while cap.isOpened():
                         print("send")
 
                         time.sleep(1)
-                        try:
-                            now = datetime.now()
-                            formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                            cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                                userId, "household ", now))
-                            sql = "UPDATE device_usage SET household_gesture_count  = household_gesture_count  + 1 WHERE user_id = %s"
-                            cursor.execute(sql, (userId))
-                            conn.commit()
-                            print("household_gesture_count更新成功！")
-                        except:
-                            print("household_gesture_count更新錯誤")
+                    update_gesture_count(userId, "household_gesture_count" , conn)
                 elif left_hand_gesture == 8:  # 滑鼠
                     left_hand_ready = False
 
@@ -560,17 +525,7 @@ while cap.isOpened():
                     else:
                         break
 
-                    try:
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                            userId, "mouse_gesture_count", now))
-                        sql = "UPDATE device_usage SET mouse_gesture_count = mouse_gesture_count + 1 WHERE user_id = %s"
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-                        print("mouse_gesture_count更新成功！")
-                    except:
-                        print("mouse_gesture_count更新錯誤")
+                    update_gesture_count(userId, "mouse_gesture_count" , conn)
 
                 elif left_hand_gesture == 9:  # 左手比"9"
                     left_hand_ready = False
@@ -715,17 +670,7 @@ while cap.isOpened():
                         cv2.imshow("Key Configuration", new_window)
                         cv2.waitKey(1)
 
-                    try:
-                        now = datetime.now()
-                        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-                        cursor.execute("INSERT INTO user_activity (user_id, activity, activity_time)VALUES (%s, %s, %s);", (
-                            userId, "keyboard_gesture_count", now))
-                        sql = "UPDATE device_usage SET keyboard_gesture_count = keyboard_gesture_count + 1 WHERE user_id = %s"
-                        cursor.execute(sql, (userId))
-                        conn.commit()
-                        print("keyboard_gesture_count更新成功！")
-                    except:
-                        print("keyboard_gesture_count更新錯誤")
+                    update_gesture_count(userId, "keyboard_gesture_count" , conn)
 
         # 手势名称映射
     gesture_names = {
